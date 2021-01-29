@@ -7,3 +7,9 @@ This dataset consists of reviews of fine foods from amazon. The data span a peri
 The raw dataset is available on [Kaggle](https://www.kaggle.com/snap/amazon-fine-food-reviews).
 
 ## SwissText 2019 (swisstext)
+
+
+
+## CNN/ DailyMail 3.0.0 (cnn_dailymail)
+
+The well-known CNN/ DailyMail data set for text summarization (version 3.0.0). The data has been fetched via [HuggingFace Datasets](https://huggingface.co/datasets/cnn_dailymail).

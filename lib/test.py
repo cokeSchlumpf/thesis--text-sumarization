@@ -1,5 +1,4 @@
-from lib.load_data import load_training_as_df
-
+from lib.data import load_training_as_df
 
 def main():
     df = load_training_as_df('amzn')

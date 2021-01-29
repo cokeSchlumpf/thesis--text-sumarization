@@ -286,5 +286,5 @@ modules.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij
 
-data/
-!data/README.md
+/data
+!/data/README.md
