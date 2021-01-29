@@ -4,4 +4,10 @@ This repository contains various building blocks for executing Text Summarizatio
 
 ## Dashboards
 
-Within the `streamlit` directory are two Dashboards for visualizing text summarization datasets. 
+Within the `streamlit` directory are two [Streamlit](https://www.streamlit.io/) based Dashboards. One for analysing the datasets, the other one for model scoring and comparison.
+
+To run the dashboards:
+
+```bash
+$ TOKENIZERS_PARALLELISM=false streamlit run streamlits/test_summarizers.py
+``` 
