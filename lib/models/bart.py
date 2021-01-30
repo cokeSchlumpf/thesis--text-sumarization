@@ -5,20 +5,24 @@ from lib.models import TextSummarizationModel
 
 class BartSummarizationModel(TextSummarizationModel):
 
-    def __init__(self, min_length: int, max_length: int, do_sample: bool):
+    def __init__(self, min_length: int, max_length: int, do_sample: bool, label: str):
         self.summarizer = pipeline("summarization")
         self.min_length = min_length
         self.max_length = max_length
         self.do_sample = do_sample
+        self.label = label
+
+    def get_label(self) -> str:
+        return self.label
 
     def to_string(self) -> str:
         return f"BartSummarizationModel({self.min_length}, {self.max_length}, {self.do_sample})"
 
     @staticmethod
     def get_pretrained(
-            min_length: int = 3, max_length: int = 30, do_sample: bool = False) -> 'BartSummarizationModel':
+            min_length: int = 3, max_length: int = 30, do_sample: bool = False, label: str = 'BERT') -> 'BartSummarizationModel':
 
-        return BartSummarizationModel(min_length, max_length, do_sample)
+        return BartSummarizationModel(min_length, max_length, do_sample, label)
 
     def predict(self, text: str) -> str:
         try:

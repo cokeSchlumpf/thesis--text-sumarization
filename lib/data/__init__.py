@@ -45,3 +45,30 @@ def load_test_as_df(
     """
 
     return _load_target_and_source(key, source_base_path, 'test')
+
+
+def load_validation_as_df(
+        key: str, source_base_path: str = SOURCE_BASE_PATH) -> pd.DataFrame:
+    """
+    Loads the validation data for a dataset.
+
+    :param key: The key of the dataset
+    :param source_base_path:  The base path for the prepared data, relative to project root
+    :return:
+    """
+
+    return _load_target_and_source(key, source_base_path, 'validation')
+
+
+def load_datasets() -> dict:
+    """
+    Returns a dict of known datasets (key -> label).
+
+    :return:
+    """
+
+    return {
+        'amzn': 'Amazon Reviews',
+        'cnn_dailymail': 'CNN DailyMail',
+        'swisstext': 'SwissText'
+    }
