@@ -1,5 +1,3 @@
-from transformers import AutoModelWithLMHead, AutoTokenizer
-
 from lib.models import TextSummarizationModel
 
 
@@ -14,15 +12,15 @@ class T5SummarizationModel(TextSummarizationModel):
         self.length_penalty = length_penalty
         self.num_beans = num_beams
         self.early_stopping = early_stopping
-        self.model = AutoModelWithLMHead.from_pretrained('t5-base')
-        self.tokenizer = AutoTokenizer.from_pretrained('t5-base')
+        self.model = None
+        self.tokenizer = None
         self.label = label
 
     @staticmethod
     def get_pretrained(
             min_length: int = 3, max_length: int = 30,
             length_penalty: float = 2.0, num_beams: int = 4,
-            early_stopping: bool = True, label: str = 'T5') -> 'T5SummarizationModel':
+            early_stopping: bool = True, label: str = 't5-base') -> 'T5SummarizationModel':
 
         return T5SummarizationModel(min_length, max_length, length_penalty, num_beams, early_stopping, label)
 
@@ -35,6 +33,11 @@ class T5SummarizationModel(TextSummarizationModel):
                f"{self.num_beans}, {self.early_stopping})"
 
     def predict(self, text: str) -> str:
+        if self.model is None:
+            from transformers import AutoModelWithLMHead, AutoTokenizer
+            self.model = AutoModelWithLMHead.from_pretrained('t5-base')
+            self.tokenizer = AutoTokenizer.from_pretrained('t5-base')
+
         inputs = self.tokenizer.encode("summarize: " + text, return_tensors="pt", max_length=512)
         outputs = self.model.generate(
             inputs, max_length=self.max_length, min_length=self.min_length, length_penalty=self.length_penalty,

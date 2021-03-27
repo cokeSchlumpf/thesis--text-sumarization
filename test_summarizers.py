@@ -1,7 +1,7 @@
 import streamlit as st
 
-from lib.data import load_datasets
-from lib.models import load_models, hash_functions
+from lib.data import get_datasets
+from lib.models import get_models, hash_functions
 from lib.predictions import predict_models
 from lib.scores import score_models
 from lib.utils import strip_margin
@@ -9,7 +9,7 @@ from lib.utils import strip_margin
 
 @st.cache(persist=False, hash_funcs=hash_functions())
 def initialize():
-    return load_models(), load_datasets()
+    return get_models(), get_datasets()
 
 
 models, datasets = initialize()

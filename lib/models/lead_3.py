@@ -10,7 +10,7 @@ class Lead3SummarizationModel(TextSummarizationModel):
 
     def __init__(self, language_model: str, label: str):
         self.language_model = language_model
-        self.nlp = spacy.load(language_model)
+        self.nlp = None
         self.label = label
 
     @staticmethod
@@ -24,5 +24,8 @@ class Lead3SummarizationModel(TextSummarizationModel):
         return f"Lead3SummarizationModel({self.language_model})"
 
     def predict(self, text: str) -> str:
+        if self.nlp is None:
+            self.nlp = spacy.load(self.language_model)
+
         doc = self.nlp(text)
         return str.join(' ', map(lambda s: str(s).strip(), list(doc.sents)[:3]))

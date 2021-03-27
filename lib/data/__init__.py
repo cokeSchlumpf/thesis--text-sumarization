@@ -1,6 +1,8 @@
 import pandas as pd
 
+from .dataset import Dataset
 from lib.utils import root_directory
+from typing import List
 
 SOURCE_BASE_PATH = './data/prepared'
 
@@ -60,15 +62,33 @@ def load_validation_as_df(
     return _load_target_and_source(key, source_base_path, 'validation')
 
 
-def load_datasets() -> dict:
+def get_datasets() -> List[Dataset]:
     """
     Returns a dict of known datasets (key -> label).
 
     :return:
     """
 
-    return {
-        'amzn': 'Amazon Reviews',
-        'cnn_dailymail': 'CNN DailyMail',
-        'swisstext': 'SwissText'
-    }
+    amzn = Dataset(
+        id='amzn', name='Amazon Reviews', language='en',
+        description="This dataset consists of reviews of fine foods from amazon. The data span a period of more than 10 years, including all ~500,000 reviews up to October 2012. Reviews include product and user information, ratings, and a plain text review. It also includes reviews from all other Amazon categories.")
+
+    cnn = Dataset(
+        id='cnn_dailymail', name='CNN/ DailyMail', language='en',
+        description='The well-known CNN/ DailyMail data set for text summarization (version 3.0.0). The data has been fetched via HuggingFace Datasets')
+
+    swisstext = Dataset(
+        id='swisstext', name='SwissText 2019', language='de',
+        description='The dataset was published for the SwissText conference 2019. ')
+
+    return [amzn, cnn, swisstext]
+
+
+def get_dataset_by_name(name: str) -> Dataset:
+    datasets = get_datasets()
+    datasets = list(filter(lambda d: d.id == name, datasets))
+
+    if len(datasets) == 0:
+        raise Exception(f"No dataset `{name}` found.")
+
+    return datasets[0]

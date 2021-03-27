@@ -3,8 +3,8 @@ import os
 import pandas as pd
 import time
 
-from datetime import date
-from lib.data import load_validation_as_df
+from datetime import datetime
+from lib.data import Dataset, load_validation_as_df
 from lib.models import TextSummarizationModel
 from lib.utils import root_directory
 from pathlib import Path
@@ -14,18 +14,18 @@ CACHE_BASE_PATH = './data/predictions'
 
 
 def predict_model(
-        key: str, model: TextSummarizationModel,
+        dataset: Dataset, model: TextSummarizationModel,
         limit: Optional[int] = None, cache_base_path: str = CACHE_BASE_PATH) -> pd.DataFrame:
     """
     Returns predictions for a dataset based on the validation set.
 
-    :param key: The dataset key
+    :param dataset: The dataset to be used
     :param model: The model to be used to make predictions
     :param limit: The number of maximal predicted records
     :param cache_base_path The base directory for the cache
     :return:
     """
-
+    key = dataset.id
     root = root_directory()
     model_key = model.to_string()
     model_key_hashed = hashlib.md5(model_key.encode()).hexdigest()
@@ -34,7 +34,11 @@ def predict_model(
     cached_file_info_path = f"{target_directory}/{model_key_hashed}.info"
     Path(target_directory).mkdir(parents=True, exist_ok=True)
 
-    df = load_validation_as_df(key)[:limit]
+    df = load_validation_as_df(key)
+
+    if limit is not None:
+        df = df[:limit]
+
     predictions = None
 
     # Load cached predictions if available
@@ -53,7 +57,7 @@ def predict_model(
             info = f"Key: {model_key}\n" \
                    f"Predictions: {len(predictions.index)}\n" \
                    f"Time Elapsed (seconds): {end - start}\n" \
-                   f"Executed: {date.today().strftime('%d.%m.%Y')}"
+                   f"Executed: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}"
             info_file.write(info)
 
     # Join predictions to text and reference summary
@@ -62,7 +66,7 @@ def predict_model(
     return df
 
 
-def predict_models(dataset: str, models: List[TextSummarizationModel], limit: int = 5) -> pd.DataFrame:
+def predict_models(dataset: Dataset, models: List[TextSummarizationModel], limit: int = 5) -> pd.DataFrame:
     """
     Predicts samples of a dataset for multiple models.
 
@@ -72,7 +76,7 @@ def predict_models(dataset: str, models: List[TextSummarizationModel], limit: in
     :return:
     """
 
-    df = load_validation_as_df(dataset)[:limit]
+    df = load_validation_as_df(dataset.id)[:limit]
 
     for model in models:
         prediction = predict_model(dataset, model, limit)

@@ -70,8 +70,19 @@ class TextSummarizationModel:
         """
         pass
 
+    def dict(self) -> dict:
+        """
+        Similar to Pydantics dict method this method returns a representation of the models properties as dict.
+        Returns: The dict representation of the model
+        """
 
-def load_models():
+        return {
+            'id': self.get_id(),
+            'label': self.get_label()
+        }
+
+
+def get_models():
     """
     Loads all known models and returns a dictionary with available models.
 
@@ -81,29 +92,22 @@ def load_models():
     from .bart import BartSummarizationModel
     from .t5 import T5SummarizationModel
 
-    _lead3_en = Lead3SummarizationModel.get_pretrained(LANGUAGE_MODEL_EN, 'LEAD-3 (EN)')
-    _lead3_de = Lead3SummarizationModel.get_pretrained(LANGUAGE_MODEL_DE, 'LEAD-3 (DE)')
+    _lead3_en = Lead3SummarizationModel.get_pretrained(LANGUAGE_MODEL_EN, 'lead-3 (EN)')
+    _lead3_de = Lead3SummarizationModel.get_pretrained(LANGUAGE_MODEL_DE, 'lead-3 (DE)')
     _bart = BartSummarizationModel.get_pretrained()
     _t5 = T5SummarizationModel.get_pretrained()
 
-    return {
-        _lead3_en.get_id(): {
-            'model': _lead3_en,
-            'default_selected': False
-        },
-        _lead3_de.get_id(): {
-            'model': _lead3_de,
-            'default_selected': False
-        },
-        _bart.get_id(): {
-            'model': _bart,
-            'default_selected': False
-        },
-        _t5.get_id(): {
-            'model': _t5,
-            'default_selected': True
-        }
-    }
+    return [_lead3_de, _lead3_en, _bart, _t5]
+
+
+def get_model_by_name(name: str) -> TextSummarizationModel:
+    models = get_models()
+    models = list(filter(lambda m: m.get_id() == name, models))
+
+    if len(models) == 0:
+        raise Exception(f"No model found with name `{name}`.")
+
+    return models[0]
 
 
 def hash_functions():

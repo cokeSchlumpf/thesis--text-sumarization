@@ -1,12 +1,10 @@
-from transformers import pipeline
-
 from lib.models import TextSummarizationModel
 
 
 class BartSummarizationModel(TextSummarizationModel):
 
     def __init__(self, min_length: int, max_length: int, do_sample: bool, label: str):
-        self.summarizer = pipeline("summarization", device=0)
+        self.summarizer = None
         self.min_length = min_length
         self.max_length = max_length
         self.do_sample = do_sample
@@ -20,12 +18,16 @@ class BartSummarizationModel(TextSummarizationModel):
 
     @staticmethod
     def get_pretrained(
-            min_length: int = 3, max_length: int = 30, do_sample: bool = False, label: str = 'BERT')\
+            min_length: int = 3, max_length: int = 30, do_sample: bool = False, label: str = 'Bart')\
             -> 'BartSummarizationModel':
 
         return BartSummarizationModel(min_length, max_length, do_sample, label)
 
     def predict(self, text: str) -> str:
+        if self.summarizer is None:
+            from transformers import pipeline
+            pipeline("summarization", device=0)
+
         try:
             return self.summarizer(
                 text[:1024], max_length=self.max_length,
