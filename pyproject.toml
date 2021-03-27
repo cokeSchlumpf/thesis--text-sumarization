@@ -8,9 +8,22 @@ license = "Apache-2.0"
 [tool.poetry.dependencies]
 python = "^3.8"
 numpy = "1.19.*"
+pydot = "^1.4.2"
+tensorflow = "^2.4.1"
+pandas = "^1.2.2"
+sklearn = "^0.0"
+spacy = "^2"
+transformers = "4.2.2"
+datasets = "1.2.1"
+torch = "1.7.1"
+torchvision = "0.8.2"
+streamlit = "^0.78.0"
+rouge-score = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
+jupyter = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+

@@ -22,7 +22,7 @@ def print_usage():
 
 
 def main():
-    if len(sys.argv) is not 3:
+    if len(sys.argv) != 3:
         print("process_predictions: Missing program arguments")
         print("")
         print_usage()

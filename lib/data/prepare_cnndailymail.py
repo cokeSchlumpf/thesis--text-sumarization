@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 from datasets import load_dataset
 
-TARGET_DIRECTORY = '../data/prepared/cnn_dailymail'
+TARGET_DIRECTORY = '../../data/prepared/cnn_dailymail'
 
 
 def main(target_directory=TARGET_DIRECTORY):
@@ -17,8 +17,8 @@ def main(target_directory=TARGET_DIRECTORY):
 
     def transform_dataset(ds):
         return {
-            'text': [ text.replace('\n', ' ') for text in ds['article'] ],
-            'summary': [ summary.replace('\n', ' ') for summary in ds['highlights'] ]
+            'text': [text.replace('\n', ' ') for text in ds['article']],
+            'summary': [summary.replace('\n', ' ') for summary in ds['highlights']]
         }
 
     Path(target_directory).mkdir(parents=True, exist_ok=True)

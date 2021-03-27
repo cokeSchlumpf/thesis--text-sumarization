@@ -4,7 +4,7 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 
 SOURCE_DATA_PATH = '../../data/raw/amzn/reviews.csv'
-TARGET_DIRECTORY = '../data/prepared/amzn'
+TARGET_DIRECTORY = '../../data/prepared/amzn'
 
 
 def main(source_data_path=SOURCE_DATA_PATH, target_directory=TARGET_DIRECTORY):

@@ -267,3 +267,5 @@ modules.xml
 
 /data
 !/data/README.md
+*.zip
+fra.txt

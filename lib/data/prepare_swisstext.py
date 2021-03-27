@@ -3,8 +3,8 @@ import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 
-SOURCE_DATA = '../data/raw/swisstext/data_train.csv'
-TARGET_DIRECTORY = '../data/prepared/swisstext'
+SOURCE_DATA = '../../data/raw/swisstext/data_train.csv'
+TARGET_DIRECTORY = '../../data/prepared/swisstext'
 
 
 def main(source_data=SOURCE_DATA, target_directory=TARGET_DIRECTORY):
