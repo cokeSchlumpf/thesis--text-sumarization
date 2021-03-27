@@ -1,16 +1,55 @@
+import glob
 import hashlib
 import os
 import pandas as pd
 import time
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from lib.data import Dataset, load_validation_as_df
 from lib.models import TextSummarizationModel
 from lib.utils import root_directory
 from pathlib import Path
+from pydantic import BaseModel
 from typing import List, Optional
 
 CACHE_BASE_PATH = './data/predictions'
+
+
+class PredictionInfo(BaseModel):
+
+    model: str
+    dataset: str
+    count: int
+    started: float
+    finished: float
+    elapsed: str
+
+    def get_started(self) -> str:
+        return datetime.fromtimestamp(self.started).strftime("%Y-%m-%d, %H:%M:%S")
+
+    def get_table_row(self) -> List[str]:
+        return [
+            self.model,
+            self.dataset,
+            self.get_started(),
+            self.elapsed,
+            self.count
+        ]
+
+
+def list_predictions(cache_base_path: str = CACHE_BASE_PATH) -> List[PredictionInfo]:
+    """
+    Reads the cached predictions and returns the info for all predictions.
+
+    Args:
+        cache_base_path: The base directory for the cache
+
+    Returns:
+        The summaries.
+    """
+    root = root_directory()
+    target_directory = f"{root}/{cache_base_path}"
+    return [PredictionInfo.parse_file(f) for f in glob.iglob(target_directory + '/**/*.info', recursive=True)]
 
 
 def predict_model(
@@ -54,10 +93,10 @@ def predict_model(
         # Cache predictions
         predictions.to_csv(cached_file_path, index=False, header=True)
         with open(cached_file_info_path, 'w') as info_file:
-            info = f"Key: {model_key}\n" \
-                   f"Predictions: {len(predictions.index)}\n" \
-                   f"Time Elapsed (seconds): {end - start}\n" \
-                   f"Executed: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}"
+            info = PredictionInfo(
+                model=model.get_id(), dataset=dataset.id, count=predictions.shape[0],
+                started=start, finished=end, elapsed=str(timedelta(seconds=end - start)))
+            info = info.json()
             info_file.write(info)
 
     # Join predictions to text and reference summary
