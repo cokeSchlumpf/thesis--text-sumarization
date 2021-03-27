@@ -13,7 +13,7 @@ from rouge_score import rouge_scorer
 from pathlib import Path
 from pydantic import BaseModel
 from tqdm import tqdm
-from typing import List, Mapping, Optional
+from typing import List, Optional
 
 CACHE_BASE_PATH = './data/scores'
 tqdm.pandas()
